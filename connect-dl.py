@@ -111,8 +111,10 @@ while i < len(videos) - 1:
     os.system('ffmpeg -loop 1 -framerate 6 -i "{0}l.png" -c:v libx264 -t {1} "{0}l.mp4"'.format(workdir.joinpath(
         str(i)), time_get_seconds(time_add_sub(videos[i + 1][1], time_add_sub(videos[i][1], videos[i][2]), True))))
     concat_input += ' -i "' + str(workdir.joinpath(str(i) + '.mp4')) + '"'
-    concat_input += ' -i "' + str(workdir.joinpath(str(i) + 'l.mp4')) + '"'
-    video_count += 2
+    if time_greater_than(videos[i + 1][1], time_add_sub(videos[i][1], videos[i][2])):
+        concat_input += ' -i "' + str(workdir.joinpath(str(i) + 'l.mp4')) + '"'
+        video_count += 1
+    video_count += 1
     i += 1
 
 concat_input += ' -i "' + str(workdir.joinpath(str(i) + '.mp4')) + '"'
