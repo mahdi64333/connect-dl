@@ -53,10 +53,11 @@ for file in path.iterdir():
         except IndexError:
             start = time_add_sub(videos[-1][1], videos[-1][2])
         xml_file.close()
-        videos.append(
-            [file.name.replace('.flv', ''),
-             start,
-             duration_regex.findall(subprocess.getoutput('ffprobe ' + file.name))[0]])
+        if os.path.getsize(file) > 1_048_576:
+            videos.append(
+                [file.name.replace('.flv', ''),
+                start,
+                duration_regex.findall(subprocess.getoutput('ffprobe ' + file.name))[0]])
     if file.name.startswith('cameraVoip') and file.name.endswith('.flv'):
         xml_file = open(file.name.replace('.flv', '.xml'))
         try:
@@ -64,10 +65,11 @@ for file in path.iterdir():
         except IndexError:
             start = time_add_sub(audios[-1][1], audios[-1][2])
         xml_file.close()
-        audios.append(
-            [file.name.replace('.flv', ''),
-             start,
-             duration_regex.findall(subprocess.getoutput('ffprobe ' + file.name))[0]])
+        if os.path.getsize(file) > 10240:
+            audios.append(
+                [file.name.replace('.flv', ''),
+                start,
+                duration_regex.findall(subprocess.getoutput('ffprobe ' + file.name))[0]])
 
 workdir = path.joinpath(str(time_ns()))
 workdir.mkdir()
